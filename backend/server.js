@@ -3,125 +3,96 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const mongoose = require("mongoose");
+const rateLimit = require("express-rate-limit");
 
-
-// Routes
+const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const farmerRoutes = require("./routes/farmerRoutes");
 const cropDiseaseRoutes = require("./routes/cropDiseaseRoutes");
 const voiceRoutes = require("./routes/voiceRoutes");
-
-
-// App
+const marketPriceRoutes = require("./routes/marketPriceRoutes");
 
 const app = express();
 
+// ================================
+// Connect Database
+// ================================
+connectDB();
 
-// Middleware
+// ================================
+// Middlewares
+// ================================
+app.use(helmet());
 
-app.use(
-    helmet()
-);
+app.use(cors());
 
-app.use(
-    cors()
-);
+app.use(express.json());
 
-app.use(
-    express.json()
-);
+app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    express.urlencoded({
-        extended:true
-    })
-);
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
+app.use(limiter);
 
+// ================================
 // Static Upload Folder
+// ================================
+app.use("/uploads", express.static("uploads"));
 
-app.use(
-    "/uploads",
-    express.static("uploads")
-);
+// ================================
+// Routes
+// ================================
+app.use("/api/auth", authRoutes);
 
+app.use("/api/farmers", farmerRoutes);
 
-// Database Connection
+app.use("/api/crop-disease", cropDiseaseRoutes);
 
-mongoose
-.connect(process.env.MONGO_URI)
-.then(()=>{
+app.use("/api/voice", voiceRoutes);
 
-    console.log("MongoDB Connected Successfully");
+app.use("/api/market-prices", marketPriceRoutes);
 
-})
-.catch((error)=>{
-
-    console.log(
-        "MongoDB Connection Error:",
-        error.message
-    );
-
+// ================================
+// Home Route
+// ================================
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Fosoler Doctor API Running",
+  });
 });
 
-
-
-// API Routes
-
-app.use(
-    "/api/auth",
-    authRoutes
-);
-
-
-app.use(
-    "/api/farmer",
-    farmerRoutes
-);
-
-
-app.use(
-    "/api/crop-disease",
-    cropDiseaseRoutes
-);
-
-
-// Voice AI Route
-
-app.use(
-    "/api/voice",
-    voiceRoutes
-);
-
-
-
-// Home Test Route
-
-app.get("/",(req,res)=>{
-
-    res.json({
-
-        success:true,
-
-        message:"Fosoler Doctor API Running"
-
-    });
-
+// ================================
+// 404 Route
+// ================================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route Not Found",
+  });
 });
 
+// ================================
+// Global Error Handler
+// ================================
+app.use((err, req, res, next) => {
+  console.error(err);
 
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 
-// Server
-
+// ================================
+// Start Server
+// ================================
 const PORT = process.env.PORT || 5000;
 
-
-app.listen(PORT,()=>{
-
-    console.log(
-        `🚀 Server Running on Port ${PORT}`
-    );
-
+app.listen(PORT, () => {
+  console.log(`🚀 Server Running on Port ${PORT}`);
 });
