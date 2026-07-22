@@ -7,11 +7,15 @@ const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 
+// ================================
+// Routes
+// ================================
 const authRoutes = require("./routes/authRoutes");
 const farmerRoutes = require("./routes/farmerRoutes");
 const cropDiseaseRoutes = require("./routes/cropDiseaseRoutes");
 const voiceRoutes = require("./routes/voiceRoutes");
 const marketPriceRoutes = require("./routes/marketPriceRoutes");
+const weatherRoutes = require("./routes/weatherRoutes");
 
 const app = express();
 
@@ -44,7 +48,7 @@ app.use(limiter);
 app.use("/uploads", express.static("uploads"));
 
 // ================================
-// Routes
+// API Routes
 // ================================
 app.use("/api/auth", authRoutes);
 
@@ -56,11 +60,13 @@ app.use("/api/voice", voiceRoutes);
 
 app.use("/api/market-prices", marketPriceRoutes);
 
+app.use("/api/weather", weatherRoutes);
+
 // ================================
 // Home Route
 // ================================
 app.get("/", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Fosoler Doctor API Running",
   });
