@@ -91,6 +91,11 @@ const securityDashboardRoutes =
   require("./routes/securityDashboardRoutes");
 
 
+// Module-18 Admin Session
+const adminSessionRoutes =
+  require("./routes/adminSessionRoutes");
+
+
 
 
 // ================================
@@ -127,19 +132,16 @@ app.use(
 );
 
 
-
 app.use(
   "/api/farmer",
   farmerRoutes
 );
 
 
-
 app.use(
   "/api/admin",
   adminRoutes
 );
-
 
 
 app.use(
@@ -149,7 +151,7 @@ app.use(
 
 
 
-// Notifications
+// Admin Notifications
 app.use(
   "/api/admin/notifications",
   adminNotificationRoutes
@@ -157,7 +159,7 @@ app.use(
 
 
 
-// Analytics
+// Admin Analytics
 app.use(
   "/api/admin/analytics",
   adminAnalyticsRoutes
@@ -193,6 +195,14 @@ app.use(
 app.use(
   "/api/admin/security",
   securityDashboardRoutes
+);
+
+
+
+// Module-18 Admin Sessions
+app.use(
+  "/api/admin/sessions",
+  adminSessionRoutes
 );
 
 
