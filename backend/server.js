@@ -95,9 +95,14 @@ const adminSessionRoutes =
   require("./routes/adminSessionRoutes");
 
 
-// Module-19 Security Audit
+// Module-19
 const securityAuditRoutes =
   require("./routes/securityAuditRoutes");
+
+
+// Module-20
+const securityAlertRoutes =
+  require("./routes/securityAlertRoutes");
 
 
 
@@ -208,7 +213,7 @@ app.use(
 
 
 
-// Admin Sessions Module-18
+// Admin Sessions
 app.use(
  "/api/admin/sessions",
  adminSessionRoutes
@@ -216,10 +221,18 @@ app.use(
 
 
 
-// Security Audit Module-19
+// Security Audits
 app.use(
  "/api/admin/security-audits",
  securityAuditRoutes
+);
+
+
+
+// Security Alerts
+app.use(
+ "/api/admin/security-alerts",
+ securityAlertRoutes
 );
 
 
