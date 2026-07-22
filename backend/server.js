@@ -23,9 +23,8 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const cropCalendarRoutes = require("./routes/cropCalendarRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const activityRoutes = require("./routes/activityRoutes");
-
-// Module-12
 const aiRecommendationRoutes = require("./routes/aiRecommendationRoutes");
+const expertConsultationRoutes = require("./routes/expertConsultationRoutes");
 
 
 // ==========================
@@ -84,8 +83,9 @@ app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/activity", activityRoutes);
 
-// Module-12
 app.use("/api/ai-recommendations", aiRecommendationRoutes);
+
+app.use("/api/expert-consultation", expertConsultationRoutes);
 
 
 // ==========================
