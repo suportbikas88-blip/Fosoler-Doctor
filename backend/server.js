@@ -7,26 +7,27 @@ const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 
-// ================================
+// ==========================
 // Routes
-// ================================
+// ==========================
 const authRoutes = require("./routes/authRoutes");
 const farmerRoutes = require("./routes/farmerRoutes");
 const cropDiseaseRoutes = require("./routes/cropDiseaseRoutes");
 const voiceRoutes = require("./routes/voiceRoutes");
 const marketPriceRoutes = require("./routes/marketPriceRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 
-// ================================
-// Connect Database
-// ================================
+// ==========================
+// Database Connection
+// ==========================
 connectDB();
 
-// ================================
+// ==========================
 // Middlewares
-// ================================
+// ==========================
 app.use(helmet());
 
 app.use(cors());
@@ -42,14 +43,14 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// ================================
-// Static Upload Folder
-// ================================
+// ==========================
+// Upload Folder
+// ==========================
 app.use("/uploads", express.static("uploads"));
 
-// ================================
+// ==========================
 // API Routes
-// ================================
+// ==========================
 app.use("/api/auth", authRoutes);
 
 app.use("/api/farmers", farmerRoutes);
@@ -62,9 +63,11 @@ app.use("/api/market-prices", marketPriceRoutes);
 
 app.use("/api/weather", weatherRoutes);
 
-// ================================
-// Home Route
-// ================================
+app.use("/api/notifications", notificationRoutes);
+
+// ==========================
+// Home API
+// ==========================
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -72,9 +75,9 @@ app.get("/", (req, res) => {
   });
 });
 
-// ================================
-// 404 Route
-// ================================
+// ==========================
+// 404 Handler
+// ==========================
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -82,21 +85,21 @@ app.use((req, res) => {
   });
 });
 
-// ================================
-// Global Error Handler
-// ================================
+// ==========================
+// Error Handler
+// ==========================
 app.use((err, req, res, next) => {
   console.error(err);
 
-  res.status(err.status || 500).json({
+  res.status(500).json({
     success: false,
     message: err.message || "Internal Server Error",
   });
 });
 
-// ================================
-// Start Server
-// ================================
+// ==========================
+// Server Start
+// ==========================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
