@@ -40,7 +40,7 @@ app.use(express.json());
 
 app.use(
   express.urlencoded({
-    extended: true,
+    extended:true,
   })
 );
 
@@ -91,9 +91,14 @@ const securityDashboardRoutes =
   require("./routes/securityDashboardRoutes");
 
 
-// Module-18 Admin Session
 const adminSessionRoutes =
   require("./routes/adminSessionRoutes");
+
+
+// Module-19 Security Audit
+const securityAuditRoutes =
+  require("./routes/securityAuditRoutes");
+
 
 
 
@@ -102,21 +107,22 @@ const adminSessionRoutes =
 // Default Route
 // ================================
 
-app.get("/", (req, res)=>{
+app.get("/",(req,res)=>{
 
-  res.json({
+ res.json({
 
-    success:true,
+  success:true,
 
-    message:
-      "Fosoler Doctor API Running",
+  message:
+  "Fosoler Doctor API Running",
 
-    version:
-      "1.0.0"
+  version:
+  "1.0.0"
 
-  });
+ });
 
 });
+
 
 
 
@@ -127,82 +133,93 @@ app.get("/", (req, res)=>{
 
 
 app.use(
-  "/api/auth",
-  authRoutes
-);
-
-
-app.use(
-  "/api/farmer",
-  farmerRoutes
-);
-
-
-app.use(
-  "/api/admin",
-  adminRoutes
-);
-
-
-app.use(
-  "/api/expert",
-  expertRoutes
+ "/api/auth",
+ authRoutes
 );
 
 
 
-// Admin Notifications
 app.use(
-  "/api/admin/notifications",
-  adminNotificationRoutes
+ "/api/farmer",
+ farmerRoutes
 );
 
 
 
-// Admin Analytics
 app.use(
-  "/api/admin/analytics",
-  adminAnalyticsRoutes
+ "/api/admin",
+ adminRoutes
 );
 
 
 
-// System Settings
 app.use(
-  "/api/admin/settings",
-  systemSettingRoutes
+ "/api/expert",
+ expertRoutes
+);
+
+
+
+// Notifications
+app.use(
+ "/api/admin/notifications",
+ adminNotificationRoutes
+);
+
+
+
+// Analytics
+app.use(
+ "/api/admin/analytics",
+ adminAnalyticsRoutes
+);
+
+
+
+// Settings
+app.use(
+ "/api/admin/settings",
+ systemSettingRoutes
 );
 
 
 
 // Activity Logs
 app.use(
-  "/api/admin/activity-logs",
-  activityLogRoutes
+ "/api/admin/activity-logs",
+ activityLogRoutes
 );
 
 
 
-// Admin Login History
+// Login History
 app.use(
-  "/api/admin/login-history",
-  adminLoginHistoryRoutes
+ "/api/admin/login-history",
+ adminLoginHistoryRoutes
 );
 
 
 
 // Security Dashboard
 app.use(
-  "/api/admin/security",
-  securityDashboardRoutes
+ "/api/admin/security",
+ securityDashboardRoutes
 );
 
 
 
-// Module-18 Admin Sessions
+// Admin Sessions Module-18
 app.use(
-  "/api/admin/sessions",
-  adminSessionRoutes
+ "/api/admin/sessions",
+ adminSessionRoutes
+);
+
+
+
+// Security Audit Module-19
+app.use(
+ "/api/admin/security-audits",
+ securityAuditRoutes
 );
 
 
@@ -215,16 +232,17 @@ app.use(
 
 app.use((req,res)=>{
 
-  res.status(404).json({
+ res.status(404).json({
 
-    success:false,
+  success:false,
 
-    message:
-      "API Route Not Found"
+  message:
+  "API Route Not Found"
 
-  });
+ });
 
 });
+
 
 
 
@@ -236,24 +254,25 @@ app.use((req,res)=>{
 app.use((err,req,res,next)=>{
 
 
-  console.error(err);
+ console.error(err);
 
 
-  res.status(
-    err.status || 500
-  )
-  .json({
+ res.status(
+  err.status || 500
+ )
+ .json({
 
-    success:false,
+  success:false,
 
-    message:
-      err.message ||
-      "Server Error"
+  message:
+  err.message ||
+  "Server Error"
 
-  });
+ });
 
 
 });
+
 
 
 
@@ -263,20 +282,20 @@ app.use((err,req,res,next)=>{
 // ================================
 
 const PORT =
-  process.env.PORT || 5000;
+ process.env.PORT || 5000;
 
 
-app.listen(PORT, ()=>{
+app.listen(PORT,()=>{
 
 
-  console.log(
-    "🌾 Fosoler Doctor Backend"
-  );
+ console.log(
+ "🌾 Fosoler Doctor Backend"
+ );
 
 
-  console.log(
-    `🚀 Server Running on Port ${PORT}`
-  );
+ console.log(
+ `🚀 Server Running on Port ${PORT}`
+ );
 
 
 });
