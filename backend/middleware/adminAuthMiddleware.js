@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Admin = require("../models/Admin");
+const User = require("../models/User");
 
 
 const adminAuthMiddleware = async (req,res,next)=>{
@@ -7,7 +7,7 @@ const adminAuthMiddleware = async (req,res,next)=>{
     try{
 
 
-        const token = 
+        const token =
         req.headers.authorization &&
         req.headers.authorization.split(" ")[1];
 
@@ -24,7 +24,6 @@ const adminAuthMiddleware = async (req,res,next)=>{
         }
 
 
-
         const decoded = jwt.verify(
             token,
             process.env.JWT_SECRET
@@ -32,13 +31,13 @@ const adminAuthMiddleware = async (req,res,next)=>{
 
 
 
-        const admin = await Admin.findById(
+        const admin = await User.findById(
             decoded.id
         ).select("-password");
 
 
 
-        if(!admin){
+        if(!admin || admin.role !== "admin"){
 
             return res.status(401).json({
 
@@ -51,7 +50,7 @@ const adminAuthMiddleware = async (req,res,next)=>{
 
 
 
-        if(admin.status === "blocked"){
+        if(admin.isActive === false){
 
             return res.status(403).json({
 
@@ -85,6 +84,7 @@ const adminAuthMiddleware = async (req,res,next)=>{
     }
 
 };
+
 
 
 module.exports = adminAuthMiddleware;
