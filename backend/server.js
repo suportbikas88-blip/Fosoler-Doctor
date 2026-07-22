@@ -6,11 +6,6 @@ const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 
-// Routes
-const authRoutes = require("./routes/authRoutes");
-const farmerRoutes = require("./routes/farmerRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-
 
 // Load Environment Variables
 dotenv.config();
@@ -30,9 +25,9 @@ const app = express();
 app.use(cors());
 
 app.use(
-    helmet({
-        crossOriginResourcePolicy:false,
-    })
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
 );
 
 app.use(morgan("dev"));
@@ -40,10 +35,35 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use(
-    express.urlencoded({
-        extended:true
-    })
+  express.urlencoded({
+    extended: true,
+  })
 );
+
+
+// ================================
+// Route Imports
+// ================================
+
+const authRoutes = require("./routes/authRoutes");
+
+const farmerRoutes = require("./routes/farmerRoutes");
+
+const adminRoutes = require("./routes/adminRoutes");
+
+const expertRoutes = require("./routes/expertRoutes");
+
+const adminNotificationRoutes =
+  require("./routes/adminNotificationRoutes");
+
+const adminAnalyticsRoutes =
+  require("./routes/adminAnalyticsRoutes");
+
+const systemSettingRoutes =
+  require("./routes/systemSettingRoutes");
+
+const activityLogRoutes =
+  require("./routes/activityLogRoutes");
 
 
 
@@ -51,16 +71,20 @@ app.use(
 // Home Route
 // ================================
 
-app.get("/", (req,res)=>{
+app.get("/", (req, res) => {
 
-    res.status(200).json({
+  res.status(200).json({
 
-        success:true,
-        app:"Fosoler Doctor API",
-        version:"1.0.0",
-        message:"Backend Running Successfully"
+    success: true,
 
-    });
+    app: "Fosoler Doctor API",
+
+    version: "1.0.0",
+
+    message:
+      "Backend Running Successfully",
+
+  });
 
 });
 
@@ -70,22 +94,56 @@ app.get("/", (req,res)=>{
 // API Routes
 // ================================
 
+
 app.use(
-    "/api/auth",
-    authRoutes
+  "/api/auth",
+  authRoutes
 );
 
 
 app.use(
-    "/api/farmer",
-    farmerRoutes
+  "/api/farmer",
+  farmerRoutes
 );
 
 
-// Module-14 Admin Panel API
 app.use(
-    "/api/admin",
-    adminRoutes
+  "/api/admin",
+  adminRoutes
+);
+
+
+app.use(
+  "/api/expert",
+  expertRoutes
+);
+
+
+// Notification Management
+app.use(
+  "/api/admin/notifications",
+  adminNotificationRoutes
+);
+
+
+// Analytics Dashboard
+app.use(
+  "/api/admin/analytics",
+  adminAnalyticsRoutes
+);
+
+
+// System Settings
+app.use(
+  "/api/admin/settings",
+  systemSettingRoutes
+);
+
+
+// Activity Logs
+app.use(
+  "/api/admin/activity-logs",
+  activityLogRoutes
 );
 
 
@@ -94,14 +152,16 @@ app.use(
 // 404 Route
 // ================================
 
-app.use((req,res)=>{
+app.use((req, res) => {
 
-    res.status(404).json({
+  res.status(404).json({
 
-        success:false,
-        message:"Route Not Found"
+    success:false,
 
-    });
+    message:
+      "Route Not Found",
+
+  });
 
 });
 
@@ -111,17 +171,24 @@ app.use((req,res)=>{
 // Global Error Handler
 // ================================
 
-app.use((err,req,res,next)=>{
-
-    console.error(err.stack);
+app.use((err, req, res, next)=>{
 
 
-    res.status(err.status || 500).json({
+  console.error(err.stack);
 
-        success:false,
-        message:err.message || "Internal Server Error"
 
-    });
+  res.status(
+    err.status || 500
+  )
+  .json({
+
+    success:false,
+
+    message:
+      err.message ||
+      "Internal Server Error",
+
+  });
 
 
 });
@@ -132,14 +199,28 @@ app.use((err,req,res,next)=>{
 // Start Server
 // ================================
 
-const PORT = process.env.PORT || 5000;
+const PORT =
+  process.env.PORT || 5000;
 
 
-app.listen(PORT,()=>{
+app.listen(PORT, ()=>{
 
-    console.log("======================================");
-    console.log("🌾 Fosoler Doctor Backend Started");
-    console.log(`🚀 Server Running on Port ${PORT}`);
-    console.log("======================================");
+
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "🌾 Fosoler Doctor Backend Started"
+  );
+
+  console.log(
+    `🚀 Server Running on Port ${PORT}`
+  );
+
+  console.log(
+    "======================================"
+  );
+
 
 });
