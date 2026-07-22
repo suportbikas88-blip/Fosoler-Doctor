@@ -10,6 +10,8 @@
   "author": "Bikas Haque",
   "license": "MIT",
   "dependencies": {
+    "@google/genai": "^2.13.0",
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
@@ -20,7 +22,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
     "morgan": "^1.10.0",
-    "multer": "^2.0.2"
+    "multer": "^2.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

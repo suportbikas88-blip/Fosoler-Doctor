@@ -1,80 +1,127 @@
+require("dotenv").config();
+
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
 const helmet = require("helmet");
-const morgan = require("morgan");
+const mongoose = require("mongoose");
 
-const connectDB = require("./config/db");
 
-// Load Environment Variables
-dotenv.config();
+// Routes
 
-// Connect Database
-connectDB();
+const authRoutes = require("./routes/authRoutes");
+const farmerRoutes = require("./routes/farmerRoutes");
+const cropDiseaseRoutes = require("./routes/cropDiseaseRoutes");
+const voiceRoutes = require("./routes/voiceRoutes");
+
+
+// App
 
 const app = express();
 
-// Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(helmet());
-app.use(morgan("dev"));
 
-// =====================
-// Import Routes
-// =====================
-const authRoutes = require("./routes/authRoutes");
-const farmerRoutes = require("./routes/farmerRoutes");
+// Middleware
 
-// =====================
-// Home Route
-// =====================
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    app: "Fosoler Doctor API",
-    version: "1.0.0",
-    message: "Backend Running Successfully",
-  });
+app.use(
+    helmet()
+);
+
+app.use(
+    cors()
+);
+
+app.use(
+    express.json()
+);
+
+app.use(
+    express.urlencoded({
+        extended:true
+    })
+);
+
+
+// Static Upload Folder
+
+app.use(
+    "/uploads",
+    express.static("uploads")
+);
+
+
+// Database Connection
+
+mongoose
+.connect(process.env.MONGO_URI)
+.then(()=>{
+
+    console.log("MongoDB Connected Successfully");
+
+})
+.catch((error)=>{
+
+    console.log(
+        "MongoDB Connection Error:",
+        error.message
+    );
+
 });
 
-// =====================
+
+
 // API Routes
-// =====================
-app.use("/api/auth", authRoutes);
-app.use("/api/farmer", farmerRoutes);
 
-// =====================
-// 404 Route
-// =====================
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route Not Found",
-  });
+app.use(
+    "/api/auth",
+    authRoutes
+);
+
+
+app.use(
+    "/api/farmer",
+    farmerRoutes
+);
+
+
+app.use(
+    "/api/crop-disease",
+    cropDiseaseRoutes
+);
+
+
+// Voice AI Route
+
+app.use(
+    "/api/voice",
+    voiceRoutes
+);
+
+
+
+// Home Test Route
+
+app.get("/",(req,res)=>{
+
+    res.json({
+
+        success:true,
+
+        message:"Fosoler Doctor API Running"
+
+    });
+
 });
 
-// =====================
-// Global Error Handler
-// =====================
-app.use((err, req, res, next) => {
-  console.error(err.stack);
 
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-  });
-});
 
-// =====================
-// Start Server
-// =====================
+// Server
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log("======================================");
-  console.log("🌾 Fosoler Doctor Backend Started");
-  console.log(`🚀 Server Running on Port ${PORT}`);
-  console.log("======================================");
+
+app.listen(PORT,()=>{
+
+    console.log(
+        `🚀 Server Running on Port ${PORT}`
+    );
+
 });

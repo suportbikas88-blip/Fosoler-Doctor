@@ -1,3 +1,5 @@
-backend/node_modules
 backend/.env
-backend/package-lock.json
+backend/uploads/
+backend/*.mp3
+backend/*.aac
+node_modules/
