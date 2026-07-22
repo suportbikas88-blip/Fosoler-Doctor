@@ -7,22 +7,24 @@ const morgan = require("morgan");
 const connectDB = require("./config/db");
 
 
-// Load Environment Variables
+// Load Environment
 dotenv.config();
 
 
-// Connect Database
+// Database Connection
 connectDB();
 
 
 const app = express();
 
 
-// ================================
+
+// ==================================
 // Middlewares
-// ================================
+// ==================================
 
 app.use(cors());
+
 
 app.use(
   helmet({
@@ -30,59 +32,82 @@ app.use(
   })
 );
 
+
 app.use(morgan("dev"));
+
 
 app.use(express.json());
 
+
 app.use(
   express.urlencoded({
-    extended: true,
+    extended:true,
   })
 );
 
 
-// ================================
+
+
+// ==================================
 // Route Imports
-// ================================
+// ==================================
 
-const authRoutes = require("./routes/authRoutes");
+const authRoutes =
+  require("./routes/authRoutes");
 
-const farmerRoutes = require("./routes/farmerRoutes");
 
-const adminRoutes = require("./routes/adminRoutes");
+const farmerRoutes =
+  require("./routes/farmerRoutes");
 
-const expertRoutes = require("./routes/expertRoutes");
+
+const adminRoutes =
+  require("./routes/adminRoutes");
+
+
+const expertRoutes =
+  require("./routes/expertRoutes");
+
 
 const adminNotificationRoutes =
   require("./routes/adminNotificationRoutes");
 
+
 const adminAnalyticsRoutes =
   require("./routes/adminAnalyticsRoutes");
 
+
 const systemSettingRoutes =
   require("./routes/systemSettingRoutes");
+
 
 const activityLogRoutes =
   require("./routes/activityLogRoutes");
 
 
+const adminLoginHistoryRoutes =
+  require("./routes/adminLoginHistoryRoutes");
 
-// ================================
-// Home Route
-// ================================
 
-app.get("/", (req, res) => {
 
-  res.status(200).json({
 
-    success: true,
+// ==================================
+// Home API
+// ==================================
 
-    app: "Fosoler Doctor API",
+app.get("/", (req,res)=>{
 
-    version: "1.0.0",
+  res.json({
+
+    success:true,
+
+    app:
+      "Fosoler Doctor API",
+
+    version:
+      "1.0.0",
 
     message:
-      "Backend Running Successfully",
+      "Backend Running Successfully"
 
   });
 
@@ -90,9 +115,11 @@ app.get("/", (req, res) => {
 
 
 
-// ================================
+
+
+// ==================================
 // API Routes
-// ================================
+// ==================================
 
 
 app.use(
@@ -101,10 +128,12 @@ app.use(
 );
 
 
+
 app.use(
   "/api/farmer",
   farmerRoutes
 );
+
 
 
 app.use(
@@ -113,24 +142,28 @@ app.use(
 );
 
 
+
 app.use(
   "/api/expert",
   expertRoutes
 );
 
 
-// Notification Management
+
+// Notification
 app.use(
   "/api/admin/notifications",
   adminNotificationRoutes
 );
 
 
-// Analytics Dashboard
+
+// Analytics
 app.use(
   "/api/admin/analytics",
   adminAnalyticsRoutes
 );
+
 
 
 // System Settings
@@ -138,6 +171,7 @@ app.use(
   "/api/admin/settings",
   systemSettingRoutes
 );
+
 
 
 // Activity Logs
@@ -148,18 +182,28 @@ app.use(
 
 
 
-// ================================
-// 404 Route
-// ================================
+// Admin Login History
+app.use(
+  "/api/admin/login-history",
+  adminLoginHistoryRoutes
+);
 
-app.use((req, res) => {
+
+
+
+
+// ==================================
+// 404 Handler
+// ==================================
+
+app.use((req,res)=>{
 
   res.status(404).json({
 
     success:false,
 
     message:
-      "Route Not Found",
+      "Route Not Found"
 
   });
 
@@ -167,11 +211,13 @@ app.use((req, res) => {
 
 
 
-// ================================
-// Global Error Handler
-// ================================
 
-app.use((err, req, res, next)=>{
+
+// ==================================
+// Error Handler
+// ==================================
+
+app.use((err,req,res,next)=>{
 
 
   console.error(err.stack);
@@ -186,7 +232,7 @@ app.use((err, req, res, next)=>{
 
     message:
       err.message ||
-      "Internal Server Error",
+      "Internal Server Error"
 
   });
 
@@ -195,31 +241,36 @@ app.use((err, req, res, next)=>{
 
 
 
-// ================================
-// Start Server
-// ================================
+
+
+// ==================================
+// Server Start
+// ==================================
 
 const PORT =
   process.env.PORT || 5000;
 
 
-app.listen(PORT, ()=>{
+app.listen(PORT,()=>{
 
 
   console.log(
-    "======================================"
+    "================================="
   );
+
 
   console.log(
     "🌾 Fosoler Doctor Backend Started"
   );
 
+
   console.log(
     `🚀 Server Running on Port ${PORT}`
   );
 
+
   console.log(
-    "======================================"
+    "================================="
   );
 
 
