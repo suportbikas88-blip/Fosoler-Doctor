@@ -6,17 +6,13 @@ const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 
-
 // Environment Config
 dotenv.config();
-
 
 // Database Connect
 connectDB();
 
-
 const app = express();
-
 
 // ================================
 // Middlewares
@@ -40,57 +36,46 @@ app.use(
   })
 );
 
-
 // ================================
 // Route Imports
 // ================================
 
-const authRoutes =
-  require("./routes/authRoutes");
+const authRoutes = require("./routes/authRoutes");
 
-const farmerRoutes =
-  require("./routes/farmerRoutes");
+const farmerRoutes = require("./routes/farmerRoutes");
 
-const adminRoutes =
-  require("./routes/adminRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
-const expertRoutes =
-  require("./routes/expertRoutes");
+const expertRoutes = require("./routes/expertRoutes");
 
-const adminNotificationRoutes =
-  require("./routes/adminNotificationRoutes");
+const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
 
-const adminAnalyticsRoutes =
-  require("./routes/adminAnalyticsRoutes");
+const adminAnalyticsRoutes = require("./routes/adminAnalyticsRoutes");
 
-const systemSettingRoutes =
-  require("./routes/systemSettingRoutes");
+const systemSettingRoutes = require("./routes/systemSettingRoutes");
 
-const activityLogRoutes =
-  require("./routes/activityLogRoutes");
+const activityLogRoutes = require("./routes/activityLogRoutes");
 
-const adminLoginHistoryRoutes =
-  require("./routes/adminLoginHistoryRoutes");
+const adminLoginHistoryRoutes = require("./routes/adminLoginHistoryRoutes");
 
-const securityDashboardRoutes =
-  require("./routes/securityDashboardRoutes");
+const securityDashboardRoutes = require("./routes/securityDashboardRoutes");
 
-const adminSessionRoutes =
-  require("./routes/adminSessionRoutes");
+const adminSessionRoutes = require("./routes/adminSessionRoutes");
 
-const securityAuditRoutes =
-  require("./routes/securityAuditRoutes");
+const securityAuditRoutes = require("./routes/securityAuditRoutes");
 
-const securityAlertRoutes =
-  require("./routes/securityAlertRoutes");
+const securityAlertRoutes = require("./routes/securityAlertRoutes");
 
-const backupRoutes =
-  require("./routes/backupRoutes");
+const backupRoutes = require("./routes/backupRoutes");
 
-// Module-22
-const reportRoutes =
-  require("./routes/reportRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
+// ================================
+// Module-23
+// ================================
+
+const systemHealthRoutes =
+  require("./routes/systemHealthRoutes");
 
 // ================================
 // Default Route
@@ -99,42 +84,24 @@ const reportRoutes =
 app.get("/", (req, res) => {
 
   res.json({
-
     success: true,
-
     message: "Fosoler Doctor API Running",
-
-    version: "1.0.0"
-
+    version: "1.0.0",
   });
 
 });
-
 
 // ================================
 // API Routes
 // ================================
 
-app.use(
-  "/api/auth",
-  authRoutes
-);
+app.use("/api/auth", authRoutes);
 
-app.use(
-  "/api/farmer",
-  farmerRoutes
-);
+app.use("/api/farmer", farmerRoutes);
 
-app.use(
-  "/api/admin",
-  adminRoutes
-);
+app.use("/api/admin", adminRoutes);
 
-app.use(
-  "/api/expert",
-  expertRoutes
-);
-
+app.use("/api/expert", expertRoutes);
 
 // Notifications
 app.use(
@@ -142,13 +109,11 @@ app.use(
   adminNotificationRoutes
 );
 
-
 // Analytics
 app.use(
   "/api/admin/analytics",
   adminAnalyticsRoutes
 );
-
 
 // Settings
 app.use(
@@ -156,13 +121,11 @@ app.use(
   systemSettingRoutes
 );
 
-
 // Activity Logs
 app.use(
   "/api/admin/activity-logs",
   activityLogRoutes
 );
-
 
 // Login History
 app.use(
@@ -170,13 +133,11 @@ app.use(
   adminLoginHistoryRoutes
 );
 
-
 // Security Dashboard
 app.use(
   "/api/admin/security",
   securityDashboardRoutes
 );
-
 
 // Admin Sessions
 app.use(
@@ -184,13 +145,11 @@ app.use(
   adminSessionRoutes
 );
 
-
 // Security Audits
 app.use(
   "/api/admin/security-audits",
   securityAuditRoutes
 );
-
 
 // Security Alerts
 app.use(
@@ -198,23 +157,27 @@ app.use(
   securityAlertRoutes
 );
 
-
 // Backup System
 app.use(
   "/api/admin/backups",
   backupRoutes
 );
 
-
-// ================================
-// Module-22 Report System
-// ================================
-
+// Report System
 app.use(
   "/api/admin/reports",
   reportRoutes
 );
 
+// ================================
+// Module-23
+// System Health
+// ================================
+
+app.use(
+  "/api/admin/system-health",
+  systemHealthRoutes
+);
 
 // ================================
 // 404 Handler
@@ -223,15 +186,11 @@ app.use(
 app.use((req, res) => {
 
   res.status(404).json({
-
     success: false,
-
-    message: "API Route Not Found"
-
+    message: "API Route Not Found",
   });
 
 });
-
 
 // ================================
 // Error Handler
@@ -241,36 +200,26 @@ app.use((err, req, res, next) => {
 
   console.error(err);
 
-  res.status(
-    err.status || 500
-  ).json({
+  res.status(err.status || 500).json({
 
     success: false,
 
-    message:
-      err.message ||
-      "Server Error"
+    message: err.message || "Server Error",
 
   });
 
 });
 
-
 // ================================
 // Server Start
 // ================================
 
-const PORT =
-  process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
 
-  console.log(
-    "🌾 Fosoler Doctor Backend"
-  );
+  console.log("🌾 Fosoler Doctor Backend");
 
-  console.log(
-    `🚀 Server Running on Port ${PORT}`
-  );
+  console.log(`🚀 Server Running on Port ${PORT}`);
 
 });
