@@ -6,13 +6,12 @@ const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 
-// Environment Config
 dotenv.config();
 
-// Database Connect
 connectDB();
 
 const app = express();
+
 
 // ================================
 // Middlewares
@@ -22,7 +21,7 @@ app.use(cors());
 
 app.use(
   helmet({
-    crossOriginResourcePolicy: false,
+    crossOriginResourcePolicy:false,
   })
 );
 
@@ -32,175 +31,307 @@ app.use(express.json());
 
 app.use(
   express.urlencoded({
-    extended: true,
+    extended:true,
   })
 );
+
 
 // ================================
 // Route Imports
 // ================================
 
-const authRoutes = require("./routes/authRoutes");
-const farmerRoutes = require("./routes/farmerRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const expertRoutes = require("./routes/expertRoutes");
 
-const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
-const adminAnalyticsRoutes = require("./routes/adminAnalyticsRoutes");
-const systemSettingRoutes = require("./routes/systemSettingRoutes");
-const activityLogRoutes = require("./routes/activityLogRoutes");
-const adminLoginHistoryRoutes = require("./routes/adminLoginHistoryRoutes");
-const securityDashboardRoutes = require("./routes/securityDashboardRoutes");
-const adminSessionRoutes = require("./routes/adminSessionRoutes");
-const securityAuditRoutes = require("./routes/securityAuditRoutes");
-const securityAlertRoutes = require("./routes/securityAlertRoutes");
-const backupRoutes = require("./routes/backupRoutes");
-const reportRoutes = require("./routes/reportRoutes");
-const systemHealthRoutes = require("./routes/systemHealthRoutes");
+const authRoutes =
+require("./routes/authRoutes");
+
+
+const farmerRoutes =
+require("./routes/farmerRoutes");
+
+
+const adminRoutes =
+require("./routes/adminRoutes");
+
+
+const expertRoutes =
+require("./routes/expertRoutes");
+
+
+const adminNotificationRoutes =
+require("./routes/adminNotificationRoutes");
+
+
+const adminAnalyticsRoutes =
+require("./routes/adminAnalyticsRoutes");
+
+
+const systemSettingRoutes =
+require("./routes/systemSettingRoutes");
+
+
+const activityLogRoutes =
+require("./routes/activityLogRoutes");
+
+
+const adminLoginHistoryRoutes =
+require("./routes/adminLoginHistoryRoutes");
+
+
+const securityDashboardRoutes =
+require("./routes/securityDashboardRoutes");
+
+
+const adminSessionRoutes =
+require("./routes/adminSessionRoutes");
+
+
+const securityAuditRoutes =
+require("./routes/securityAuditRoutes");
+
+
+const securityAlertRoutes =
+require("./routes/securityAlertRoutes");
+
+
+const backupRoutes =
+require("./routes/backupRoutes");
+
+
+const reportRoutes =
+require("./routes/reportRoutes");
+
+
+const systemHealthRoutes =
+require("./routes/systemHealthRoutes");
+
+
+const feedbackRoutes =
+require("./routes/feedbackRoutes");
+
 
 // ================================
-// Module-24
+// Module-25
+// Announcement
 // ================================
 
-const feedbackRoutes = require("./routes/feedbackRoutes");
-
-// ================================
+const announcementRoutes =
+require("./routes/announcementRoutes");// ================================
 // Default Route
 // ================================
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Fosoler Doctor API Running",
-    version: "1.0.0",
-  });
+app.get("/", (req,res)=>{
+
+ res.json({
+
+  success:true,
+
+  message:"Fosoler Doctor API Running",
+
+  version:"1.0.0"
+
+ });
+
 });
+
+
 
 // ================================
 // API Routes
 // ================================
 
-app.use("/api/auth", authRoutes);
 
-app.use("/api/farmer", farmerRoutes);
+app.use(
+ "/api/auth",
+ authRoutes
+);
 
-app.use("/api/admin", adminRoutes);
 
-app.use("/api/expert", expertRoutes);
+app.use(
+ "/api/farmer",
+ farmerRoutes
+);
+
+
+app.use(
+ "/api/admin",
+ adminRoutes
+);
+
+
+app.use(
+ "/api/expert",
+ expertRoutes
+);
+
 
 // Notifications
 app.use(
-  "/api/admin/notifications",
-  adminNotificationRoutes
+ "/api/admin/notifications",
+ adminNotificationRoutes
 );
+
 
 // Analytics
 app.use(
-  "/api/admin/analytics",
-  adminAnalyticsRoutes
+ "/api/admin/analytics",
+ adminAnalyticsRoutes
 );
+
 
 // Settings
 app.use(
-  "/api/admin/settings",
-  systemSettingRoutes
+ "/api/admin/settings",
+ systemSettingRoutes
 );
+
 
 // Activity Logs
 app.use(
-  "/api/admin/activity-logs",
-  activityLogRoutes
+ "/api/admin/activity-logs",
+ activityLogRoutes
 );
+
 
 // Login History
 app.use(
-  "/api/admin/login-history",
-  adminLoginHistoryRoutes
+ "/api/admin/login-history",
+ adminLoginHistoryRoutes
 );
+
 
 // Security Dashboard
 app.use(
-  "/api/admin/security",
-  securityDashboardRoutes
+ "/api/admin/security",
+ securityDashboardRoutes
 );
+
 
 // Admin Sessions
 app.use(
-  "/api/admin/sessions",
-  adminSessionRoutes
+ "/api/admin/sessions",
+ adminSessionRoutes
 );
+
 
 // Security Audits
 app.use(
-  "/api/admin/security-audits",
-  securityAuditRoutes
+ "/api/admin/security-audits",
+ securityAuditRoutes
 );
+
 
 // Security Alerts
 app.use(
-  "/api/admin/security-alerts",
-  securityAlertRoutes
+ "/api/admin/security-alerts",
+ securityAlertRoutes
 );
+
 
 // Backup System
 app.use(
-  "/api/admin/backups",
-  backupRoutes
+ "/api/admin/backups",
+ backupRoutes
 );
+
 
 // Reports
 app.use(
-  "/api/admin/reports",
-  reportRoutes
+ "/api/admin/reports",
+ reportRoutes
 );
+
 
 // System Health
 app.use(
-  "/api/admin/system-health",
-  systemHealthRoutes
+ "/api/admin/system-health",
+ systemHealthRoutes
 );
 
-// ================================
-// Module-24
+
 // Feedback System
+app.use(
+ "/api/admin/feedbacks",
+ feedbackRoutes
+);
+
+
+// ================================
+// Module-25
+// Announcement System
 // ================================
 
 app.use(
-  "/api/admin/feedbacks",
-  feedbackRoutes
+ "/api/admin/announcements",
+ announcementRoutes
 );
+
+
 
 // ================================
 // 404 Handler
 // ================================
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "API Route Not Found",
-  });
+app.use((req,res)=>{
+
+ res.status(404).json({
+
+  success:false,
+
+  message:"API Route Not Found"
+
+ });
+
 });
+
+
 
 // ================================
 // Error Handler
 // ================================
 
-app.use((err, req, res, next) => {
-  console.error(err);
+app.use((err,req,res,next)=>{
 
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || "Server Error",
-  });
+
+ console.error(err);
+
+
+ res.status(
+  err.status || 500
+ )
+ .json({
+
+  success:false,
+
+  message:
+   err.message ||
+   "Server Error"
+
+ });
+
+
 });
+
+
 
 // ================================
 // Server Start
 // ================================
 
-const PORT = process.env.PORT || 5000;
+const PORT =
+process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log("🌾 Fosoler Doctor Backend");
-  console.log(`🚀 Server Running on Port ${PORT}`);
+
+app.listen(PORT,()=>{
+
+
+ console.log(
+  "🌾 Fosoler Doctor Backend"
+ );
+
+
+ console.log(
+  `🚀 Server Running on Port ${PORT}`
+ );
+
+
 });
