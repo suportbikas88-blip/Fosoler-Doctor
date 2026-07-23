@@ -6,9 +6,14 @@ const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 
+
+// Environment Config
 dotenv.config();
 
+
+// Database Connect
 connectDB();
+
 
 const app = express();
 
@@ -19,20 +24,24 @@ const app = express();
 
 app.use(cors());
 
+
 app.use(
   helmet({
     crossOriginResourcePolicy:false,
   })
 );
 
+
 app.use(morgan("dev"));
+
 
 app.use(express.json());
 
+
 app.use(
-  express.urlencoded({
-    extended:true,
-  })
+ express.urlencoded({
+  extended:true,
+ })
 );
 
 
@@ -55,6 +64,7 @@ require("./routes/adminRoutes");
 
 const expertRoutes =
 require("./routes/expertRoutes");
+
 
 
 const adminNotificationRoutes =
@@ -109,13 +119,14 @@ const feedbackRoutes =
 require("./routes/feedbackRoutes");
 
 
-// ================================
 // Module-25
-// Announcement
-// ================================
-
 const announcementRoutes =
-require("./routes/announcementRoutes");// ================================
+require("./routes/announcementRoutes");
+
+
+// Module-26 AI Crop Doctor
+const cropDiseaseRoutes =
+require("./routes/cropDiseaseRoutes");// ================================
 // Default Route
 // ================================
 
@@ -132,7 +143,6 @@ app.get("/", (req,res)=>{
  });
 
 });
-
 
 
 // ================================
@@ -248,21 +258,24 @@ app.use(
 );
 
 
-// Feedback System
+// Feedback
 app.use(
  "/api/admin/feedbacks",
  feedbackRoutes
 );
 
 
-// ================================
-// Module-25
-// Announcement System
-// ================================
-
+// Module-25 Announcement
 app.use(
  "/api/admin/announcements",
  announcementRoutes
+);
+
+
+// Module-26 AI Crop Doctor
+app.use(
+ "/api/crop-disease",
+ cropDiseaseRoutes
 );
 
 
@@ -291,9 +304,7 @@ app.use((req,res)=>{
 
 app.use((err,req,res,next)=>{
 
-
  console.error(err);
-
 
  res.status(
   err.status || 500
@@ -303,11 +314,10 @@ app.use((err,req,res,next)=>{
   success:false,
 
   message:
-   err.message ||
-   "Server Error"
+  err.message ||
+  "Server Error"
 
  });
-
 
 });
 
@@ -323,15 +333,13 @@ process.env.PORT || 5000;
 
 app.listen(PORT,()=>{
 
-
  console.log(
-  "🌾 Fosoler Doctor Backend"
+ "🌾 Fosoler Doctor Backend"
  );
 
 
  console.log(
-  `🚀 Server Running on Port ${PORT}`
+ `🚀 Server Running on Port ${PORT}`
  );
-
 
 });
