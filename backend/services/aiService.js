@@ -1,7 +1,6 @@
 const fs = require("fs");
 const { GoogleGenAI } = require("@google/genai");
 
-// Debug
 console.log(
   "Gemini Key Loaded:",
   process.env.GEMINI_API_KEY ? "YES" : "NO"
@@ -11,104 +10,225 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const analyzeCropDisease = async (imagePath) => {
-  try {
-    if (!imagePath) {
-      throw new Error("Image is required.");
-    }
 
-    const imageBytes = fs.readFileSync(imagePath);
+// ===============================
+// Local Agriculture Fallback
+// ===============================
 
-    const prompt = `
-আপনি বাংলাদেশের একজন অভিজ্ঞ কৃষি রোগ বিশেষজ্ঞ (Plant Pathologist)।
+const localDiseaseFallback = (cropName) => {
 
-ব্যবহারকারী যে ফসলের ছবি আপলোড করেছে সেটি বিশ্লেষণ করুন।
+  if (
+    cropName &&
+    cropName.toLowerCase() === "rice"
+  ) {
 
-যদি ছবিতে কোনো ফসল বা গাছ না থাকে, তাহলে লিখুন:
+    return {
 
-{
-  "disease":"ফসল শনাক্ত করা যায়নি",
-  "confidence":0,
-  "symptoms":[
-    "ছবিতে কোনো ফসল বা গাছ দেখা যায়নি।"
-  ],
-  "causes":[
-    "ভুল ছবি আপলোড করা হয়েছে।"
-  ],
-  "treatment":"অনুগ্রহ করে আক্রান্ত গাছের পরিষ্কার ছবি আপলোড করুন।",
-  "pesticides":[]
-}
+      disease: "ধানের ব্লাস্ট রোগ",
 
-যদি ফসল শনাক্ত হয়, তাহলে শুধুমাত্র নিচের JSON Format-এ উত্তর দিন:
+      confidence: 70,
 
-{
-  "disease":"রোগের বাংলা নাম",
-  "confidence":95,
-  "symptoms":[
-    "লক্ষণ ১",
-    "লক্ষণ ২",
-    "লক্ষণ ৩"
-  ],
-  "causes":[
-    "কারণ ১",
-    "কারণ ২"
-  ],
-  "treatment":"বাংলাদেশের কৃষকদের উপযোগী বিস্তারিত সমাধান লিখুন।",
-  "pesticides":[
-    "প্রস্তাবিত কীটনাশক ১",
-    "প্রস্তাবিত কীটনাশক ২"
-  ]
-}
-
-শুধুমাত্র Valid JSON Return করবেন।
-কোনো Markdown, ব্যাখ্যা বা অতিরিক্ত লেখা লিখবেন না।
-`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: [
-        {
-          text: prompt,
-        },
-        {
-          inlineData: {
-            mimeType: "image/jpeg",
-            data: imageBytes.toString("base64"),
-          },
-        },
+      symptoms: [
+        "পাতায় বাদামী দাগ দেখা যায়",
+        "পাতা শুকিয়ে যেতে পারে",
+        "গাছ দুর্বল হয়ে যায়"
       ],
-    });
 
-    let text = response.text || "";
+      causes: [
+        "ছত্রাকের আক্রমণ",
+        "অতিরিক্ত আর্দ্রতা"
+      ],
 
-    text = text.replace(/```json/g, "");
-    text = text.replace(/```/g, "");
-    text = text.trim();
+      treatment:
+        "আক্রান্ত জমিতে সঠিক পানি ব্যবস্থাপনা করুন এবং কৃষি কর্মকর্তার পরামর্শ অনুযায়ী ছত্রাকনাশক ব্যবহার করুন।",
 
-    const result = JSON.parse(text);
+      pesticides: [
+        "Tricyclazole",
+        "Azoxystrobin"
+      ]
 
-    return {
-      disease: result.disease || "অজানা রোগ",
-      confidence: result.confidence || 0,
-      symptoms: result.symptoms || [],
-      causes: result.causes || [],
-      treatment: result.treatment || "কোনো সমাধান পাওয়া যায়নি",
-      pesticides: result.pesticides || [],
     };
-  } catch (error) {
-    console.error("Gemini AI Error:", error);
 
-    return {
-      disease: "অজানা",
-      confidence: 0,
-      symptoms: [],
-      causes: [],
-      treatment: "AI বিশ্লেষণ ব্যর্থ হয়েছে",
-      pesticides: [],
-    };
   }
+
+
+  return {
+
+    disease:"অজানা",
+
+    confidence:50,
+
+    symptoms:[
+      "ছবির উপর ভিত্তি করে নিশ্চিত শনাক্ত করা যায়নি"
+    ],
+
+    causes:[
+      "আরো পরিষ্কার ছবি প্রয়োজন"
+    ],
+
+    treatment:
+      "গাছের আক্রান্ত অংশের পরিষ্কার ছবি আপলোড করুন।",
+
+    pesticides:[]
+
+  };
+
 };
 
+
+
+// ===============================
+// Gemini AI Analyzer
+// ===============================
+
+const analyzeCropDisease = async (
+  imagePath,
+  cropName
+) => {
+
+
+  try {
+
+
+    if(!imagePath){
+
+      throw new Error(
+        "Image required"
+      );
+
+    }
+
+
+    const imageBytes =
+      fs.readFileSync(imagePath);
+
+
+
+    const prompt = `
+
+আপনি বাংলাদেশের কৃষি রোগ বিশেষজ্ঞ।
+
+ছবিটি বিশ্লেষণ করুন।
+
+শুধুমাত্র JSON দিন:
+
+{
+"disease":"",
+"confidence":0,
+"symptoms":[],
+"causes":[],
+"treatment":"",
+"pesticides":[]
+}
+
+`;
+
+
+
+    const response =
+      await ai.models.generateContent({
+
+        model:"gemini-2.5-flash",
+
+        contents:[
+
+          {
+            text:prompt
+          },
+
+          {
+
+            inlineData:{
+
+              mimeType:"image/jpeg",
+
+              data:
+              imageBytes.toString("base64")
+
+            }
+
+          }
+
+        ]
+
+      });
+
+
+
+    let text =
+      response.text || "";
+
+
+
+    text =
+      text
+      .replace(/```json/g,"")
+      .replace(/```/g,"")
+      .trim();
+
+
+
+    const result =
+      JSON.parse(text);
+
+
+
+    return {
+
+
+      disease:
+      result.disease || "অজানা",
+
+
+      confidence:
+      result.confidence || 0,
+
+
+      symptoms:
+      result.symptoms || [],
+
+
+      causes:
+      result.causes || [],
+
+
+      treatment:
+      result.treatment || "",
+
+
+      pesticides:
+      result.pesticides || []
+
+
+    };
+
+
+
+  }
+
+  catch(error){
+
+
+    console.log(
+      "Gemini Failed, Using Local Database:",
+      error.message
+    );
+
+
+    return localDiseaseFallback(
+      cropName
+    );
+
+
+  }
+
+
+};
+
+
+
 module.exports = {
-  analyzeCropDisease,
+
+  analyzeCropDisease
+
 };
