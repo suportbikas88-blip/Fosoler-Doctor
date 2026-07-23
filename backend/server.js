@@ -41,7 +41,6 @@ app.use(
 );
 
 
-
 // ================================
 // Route Imports
 // ================================
@@ -85,11 +84,12 @@ const securityAuditRoutes =
 const securityAlertRoutes =
   require("./routes/securityAlertRoutes");
 
-// Module-21
 const backupRoutes =
   require("./routes/backupRoutes");
 
-
+// Module-22
+const reportRoutes =
+  require("./routes/reportRoutes");
 
 
 // ================================
@@ -109,8 +109,6 @@ app.get("/", (req, res) => {
   });
 
 });
-
-
 
 
 // ================================
@@ -201,16 +199,21 @@ app.use(
 );
 
 
-// ================================
-// Module-21 Backup System
-// ================================
-
+// Backup System
 app.use(
   "/api/admin/backups",
   backupRoutes
 );
 
 
+// ================================
+// Module-22 Report System
+// ================================
+
+app.use(
+  "/api/admin/reports",
+  reportRoutes
+);
 
 
 // ================================
@@ -230,8 +233,6 @@ app.use((req, res) => {
 });
 
 
-
-
 // ================================
 // Error Handler
 // ================================
@@ -240,17 +241,19 @@ app.use((err, req, res, next) => {
 
   console.error(err);
 
-  res.status(err.status || 500).json({
+  res.status(
+    err.status || 500
+  ).json({
 
     success: false,
 
-    message: err.message || "Server Error"
+    message:
+      err.message ||
+      "Server Error"
 
   });
 
 });
-
-
 
 
 // ================================
@@ -262,8 +265,12 @@ const PORT =
 
 app.listen(PORT, () => {
 
-  console.log("🌾 Fosoler Doctor Backend");
+  console.log(
+    "🌾 Fosoler Doctor Backend"
+  );
 
-  console.log(`🚀 Server Running on Port ${PORT}`);
+  console.log(
+    `🚀 Server Running on Port ${PORT}`
+  );
 
 });
