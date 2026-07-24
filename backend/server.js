@@ -104,6 +104,9 @@ const weatherRoutes =
 const marketPriceRoutes =
   require("./routes/marketPriceRoutes");
 
+const voiceRoutes =
+  require("./routes/voiceRoutes");
+
 
 // ================================
 // Default Route
@@ -274,6 +277,14 @@ app.use(
 app.use(
   "/api/market-price",
   marketPriceRoutes
+);
+
+
+// Voice
+
+app.use(
+  "/api/voice",
+  voiceRoutes
 );
 
 
