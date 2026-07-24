@@ -87,6 +87,9 @@ const feedbackRoutes =
 const announcementRoutes =
   require("./routes/announcementRoutes");
 
+const dashboardRoutes =
+  require("./routes/dashboardRoutes");
+
 
 // ================================
 // Module-28 Routes
@@ -152,6 +155,12 @@ app.use(
 app.use(
   "/api/expert",
   expertRoutes
+);
+
+
+app.use(
+  "/api/dashboard",
+  dashboardRoutes
 );
 
 
